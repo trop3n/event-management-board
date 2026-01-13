@@ -1,9 +1,18 @@
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file in the backend directory FIRST
+backend_dir = Path(__file__).parent
+dotenv_path = backend_dir / '.env'
+load_dotenv(dotenv_path)
+
+# Now import other modules that depend on environment variables
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from models import db
 from config import config
-import os
 
 # Import routes
 from routes.auth import auth_bp

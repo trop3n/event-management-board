@@ -44,7 +44,7 @@ def get_event(event_id):
 @jwt_required()
 def add_note(event_id):
     """Add a note to an event"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json()
 
     if not data or 'note' not in data:
@@ -70,7 +70,7 @@ def add_note(event_id):
 @jwt_required()
 def update_note(event_id, note_id):
     """Update a note"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json()
 
     note = EventNote.query.get(note_id)
@@ -94,7 +94,7 @@ def update_note(event_id, note_id):
 @jwt_required()
 def delete_note(event_id, note_id):
     """Delete a note"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     note = EventNote.query.get(note_id)
     if not note or note.event_id != event_id:

@@ -9,6 +9,9 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'jwt-secret-key-change-in-production'
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=8)
+    JWT_TOKEN_LOCATION = ['headers']
+    JWT_HEADER_NAME = 'Authorization'
+    JWT_HEADER_TYPE = 'Bearer'
 
     # Ministry Platform API Configuration
     MP_API_URL = os.environ.get('MP_API_URL') or 'https://standrew.ministryplatform.com/ministryplatformapi/procs/api_church_specific_get_events'
