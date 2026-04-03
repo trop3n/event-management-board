@@ -107,11 +107,11 @@ const EventModal = ({ event, onClose }) => {
               <strong>Room:</strong> {event.room_name}
             </div>
             <div className="info-row">
-              <strong>Event Time:</strong> {formatDateTime(event.event_start_date)} - {format(parseISO(event.event_end_date), 'h:mm a')}
+              <strong>Event Time:</strong> {formatDateTime(event.event_start_date)} - {event.event_end_date ? format(parseISO(event.event_end_date), 'h:mm a') : ''}
             </div>
             {event.event_reservation_start && (
               <div className="info-row">
-                <strong>Reserved:</strong> {formatDateTime(event.event_reservation_start)} - {format(parseISO(event.event_reservation_end), 'h:mm a')}
+                <strong>Reserved:</strong> {formatDateTime(event.event_reservation_start)} - {event.event_reservation_end ? format(parseISO(event.event_reservation_end), 'h:mm a') : ''}
               </div>
             )}
             {event.minutes_for_setup > 0 && (

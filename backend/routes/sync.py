@@ -7,6 +7,13 @@ import requests
 sync_bp = Blueprint('sync', __name__)
 
 
+def _parse_iso_datetime(value):
+    """Parse an ISO datetime string from the MP API, or return None."""
+    if not value:
+        return None
+    return datetime.fromisoformat(value.replace('Z', '+00:00'))
+
+
 def fetch_events_from_mp(start_date, end_date):
     """Fetch events from Ministry Platform API"""
     url = current_app.config['MP_API_URL']
@@ -59,10 +66,10 @@ def sync_events_to_db(events_data, tracked_rooms):
             event.event_type_id = event_data.get('Event_Type_ID')
             event.room_id = room_id
             event.room_name = tracked_rooms.get(room_id, f'Room {room_id}')
-            event.event_start_date = datetime.fromisoformat(event_data.get('Event_Start_Date').replace('Z', '+00:00')) if event_data.get('Event_Start_Date') else None
-            event.event_end_date = datetime.fromisoformat(event_data.get('Event_End_Date').replace('Z', '+00:00')) if event_data.get('Event_End_Date') else None
-            event.event_reservation_start = datetime.fromisoformat(event_data.get('Event_Reservation_Start').replace('Z', '+00:00')) if event_data.get('Event_Reservation_Start') else None
-            event.event_reservation_end = datetime.fromisoformat(event_data.get('Event_Reservation_End').replace('Z', '+00:00')) if event_data.get('Event_Reservation_End') else None
+            event.event_start_date = _parse_iso_datetime(event_data.get('Event_Start_Date'))
+            event.event_end_date = _parse_iso_datetime(event_data.get('Event_End_Date'))
+            event.event_reservation_start = _parse_iso_datetime(event_data.get('Event_Reservation_Start'))
+            event.event_reservation_end = _parse_iso_datetime(event_data.get('Event_Reservation_End'))
             event.minutes_for_setup = event_data.get('Minutes_for_Setup', 0)
             event.minutes_for_cleanup = event_data.get('Minutes_for_Cleanup', 0)
             event.cancelled = event_data.get('Cancelled', False)
@@ -77,10 +84,10 @@ def sync_events_to_db(events_data, tracked_rooms):
                 event_type_id=event_data.get('Event_Type_ID'),
                 room_id=room_id,
                 room_name=tracked_rooms.get(room_id, f'Room {room_id}'),
-                event_start_date=datetime.fromisoformat(event_data.get('Event_Start_Date').replace('Z', '+00:00')) if event_data.get('Event_Start_Date') else None,
-                event_end_date=datetime.fromisoformat(event_data.get('Event_End_Date').replace('Z', '+00:00')) if event_data.get('Event_End_Date') else None,
-                event_reservation_start=datetime.fromisoformat(event_data.get('Event_Reservation_Start').replace('Z', '+00:00')) if event_data.get('Event_Reservation_Start') else None,
-                event_reservation_end=datetime.fromisoformat(event_data.get('Event_Reservation_End').replace('Z', '+00:00')) if event_data.get('Event_Reservation_End') else None,
+                event_start_date=_parse_iso_datetime(event_data.get('Event_Start_Date')),
+                event_end_date=_parse_iso_datetime(event_data.get('Event_End_Date')),
+                event_reservation_start=_parse_iso_datetime(event_data.get('Event_Reservation_Start')),
+                event_reservation_end=_parse_iso_datetime(event_data.get('Event_Reservation_End')),
                 minutes_for_setup=event_data.get('Minutes_for_Setup', 0),
                 minutes_for_cleanup=event_data.get('Minutes_for_Cleanup', 0),
                 cancelled=event_data.get('Cancelled', False),

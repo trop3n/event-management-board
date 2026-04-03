@@ -61,6 +61,11 @@ const EventBoard = () => {
     };
 
     events.forEach((event) => {
+      if (!event.event_start_date) {
+        categorized.past.push(event);
+        return;
+      }
+
       const eventDate = parseISO(event.event_start_date);
 
       if (isPast(eventDate) && !isToday(eventDate)) {
